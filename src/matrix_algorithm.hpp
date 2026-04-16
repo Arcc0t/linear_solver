@@ -58,6 +58,36 @@ auto gauss_elimination(matrix<T>& mat)
 	return is_depended;
 }
 
+template <typename T>
+auto homogenious_system_basis(matrix<T>& mat)
+	->matrix<T>
+{
+	auto is_dependent = gauss_elimination(mat);
+	std::vector<size_t> dep_vars, free_vars;
 
+	for (size_t i = 0; i < is_dependent.size(); ++i)
+		if (is_dependent[i])
+			dep_vars.push_back(i);
+		else
+			free_vars.push_back(i);
+	
+	size_t rank = dep_vars.size();
+	size_t dim = free_vars.size();
+
+	if (dim == 0)
+		return matrix<T>(1, mat.cols(), T(0));
+
+	matrix<T> basis(dim, dim + rank, T(0));
+
+	for (size_t j = 0; j < dim; ++j)
+		for (size_t i = 0; i < rank; ++i)
+			basis[j][dep_vars[i]] = -mat[i][free_vars[j]];
+	
+	for (size_t i = 0; i < dim; ++i)
+		basis[i][free_vars[i]] = T(1);
+
+	return basis;
+	
+}
 
 #endif
