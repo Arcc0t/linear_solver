@@ -5,6 +5,7 @@
 #include <vector>
 #include <cassert>
 #include <utility>
+#include <iostream>
 
 template<typename T>
 class matrix_proxy {
@@ -41,6 +42,8 @@ private:
 	size_t rows_;
 	size_t cols_;
 public:
+
+	static constexpr size_t npos = -1;
 
 //----------- elements access ----------
 
@@ -106,22 +109,30 @@ public:
 
 	}
 
-	void multiply_row(size_t i, const T& scalar, size_t offset = 0)
+	void multiply_row(size_t i, T scalar, size_t offset = 0)
 	{
+		assert(scalar != T(0));
+
 		for (size_t j = offset; j < cols_; ++j)
 			at(i, j) *= scalar;
 	}
 
 	//for integer matrix algorithms
 
-	void divide_row(size_t i, const T& scalar, size_t offset = 0)
+	void divide_row(size_t i, T scalar, size_t offset = 0)
 	{
+		assert(scalar != T(0));
+		
 		for (size_t j = offset; j < cols_; ++j)
 			at(i, j) /= scalar;
+		
+	
 	}
 
-	void add_scaled_row(size_t from, size_t to, const T& scalar, size_t offset = 0)
+	void add_scaled_row(size_t to, size_t from, const T& scalar, size_t offset = 0)
 	{
+		assert(to != from);
+		
 		for (size_t j = offset; j < cols_; ++j)
 			at(to, j) += at(from, j) * scalar;
 	}
