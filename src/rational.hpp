@@ -24,12 +24,13 @@ uint64_t lcm(uint64_t a, uint64_t b)
 	return a / gcd(a, b) * b;
 }
 
-
+inline
 uint64_t i64abs(int64_t x)
 {
 	return x < 0? -x: x;	
 }
 
+inline
 int64_t sign(int64_t x)
 {
 	return (x > 0) - (x < 0);
@@ -42,6 +43,10 @@ private:
 
 	void normalize()
 	{
+		if (num == 0){
+			den = 1;
+			return;
+		}
 		auto sgn_d = sign(den);
 		num *= sgn_d;
 		den *= sgn_d;
@@ -86,10 +91,10 @@ public:
 
 		int64_t div1 = gcd(i64abs(num), other.den);
 		int64_t div2 = gcd(i64abs(other.num), den);
-
-		assert(div1 <= i64abs(num) && div1 <= other.den);
-		assert(div2 <= i64abs(other.num) && div2 <= den);	
-
+#if 1
+		assert(num == 0 || (div1 <= i64abs(num) && div1 <= other.den));
+		assert(other.num == 0 || (div2 <= i64abs(other.num) && div2 <= den));	
+#endif
 		int64_t res_num = (num / div1) * (other.num / div2);
 		int64_t res_den = (den / div2) * (other.den / div1);
 #ifdef DEBUG_MSG
